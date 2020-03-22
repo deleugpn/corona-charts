@@ -11,6 +11,7 @@
         google.charts.setOnLoadCallback(top5Countries500WithoutChina());
         google.charts.setOnLoadCallback(top10CountriesSinceDay1());
         google.charts.setOnLoadCallback(top10CountriesSinceDay1ExcludingChina());
+        google.charts.setOnLoadCallback(specificCountries1());
 
         function top5Countries() {
             return function () {
@@ -81,6 +82,18 @@
                 let header = data.shift();
 
                 charts(header, data, title, subtitle, 'chart-6');
+            }
+        }
+
+        function specificCountries1() {
+            return function () {
+                let data = [["Day","Brazil","Germany","Italy","Netherlands","Spain","US","United Kingdom"],[0,151,130,155,128,120,118,116],[1,151,159,229,188,165,149,164],[2,162,196,322,265,222,217,207],[3,200,262,453,321,259,262,274],[4,321,482,655,382,400,402,322],[5,372,670,888,503,500,518,384],[6,621,799,1128,503,673,583,459],[7,793,1040,1694,806,1073,959,459],[8,1021,1176,2036,962,1695,1281,802],[9,null,1457,2502,1138,2277,1663,1144],[10,null,1908,3089,1416,2277,2179,1145],[11,null,2078,3858,1711,5232,2727,1551],[12,null,3675,4636,2058,6391,3499,1960],[13,null,4585,5883,2467,7798,4632,2642],[14,null,5795,7375,3003,9942,6421,2716],[15,null,7272,9172,3640,11748,7783,4014],[16,null,9257,10149,null,13910,13677,5067],[17,null,12327,12462,null,17963,19100,null],[18,null,15320,12462,null,20410,25489,null],[19,null,19848,17660,null,25374,null,null],[20,null,22213,21157,null,null,null,null],[21,null,null,24747,null,null,null,null],[22,null,null,27980,null,null,null,null],[23,null,null,31506,null,null,null,null],[24,null,null,35713,null,null,null,null],[25,null,null,41035,null,null,null,null],[26,null,null,47021,null,null,null,null],[27,null,null,53578,null,null,null,null]];
+                let title = 'Daily growth of specific countries';
+                let subtitle = 'after reaching 100 cases';
+
+                let header = data.shift();
+
+                charts(header, data, title, subtitle, 'chart-7');
             }
         }
 

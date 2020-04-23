@@ -254,7 +254,7 @@
             let table = new google.visualization.DataTable();
 
             for (let item in header) {
-                if (header[item] == 'Date') {
+                if (header[item] == 'Date' || header[item] == 'Week') {
                     table.addColumn('string', header[item]);
                 } else {
                     table.addColumn('number', header[item]);

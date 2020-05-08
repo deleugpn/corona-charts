@@ -3,6 +3,8 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
+        window.counter = 0;
+
         function loadJSON(path, success) {
             var xhr = new XMLHttpRequest();
 
@@ -21,101 +23,65 @@
             xhr.send();
         }
 
+        function drawColumnChart(file, title) {
+            let position = ++window.counter;
+
+            google.charts.setOnLoadCallback(function () {
+                loadJSON(file, function (response) {
+                    let options = {
+                        title: title,
+                        width: '100%',
+                        height: 600,
+                        legend: { position: "none" },
+                    };
+
+                    let chart = new google.visualization.ColumnChart(document.getElementById('chart-' + position));
+
+                    chart.draw(google.visualization.arrayToDataTable(response), options);
+                });
+            });
+        }
+
+        function drawLineChart(file, title) {
+            let position = ++window.counter;
+
+            google.charts.setOnLoadCallback(function () {
+                loadJSON(file, function (response) {
+                    let header = response.shift();
+                    let colors = response.shift();
+
+                    charts(header, colors, response, title, '', 'chart-' + position);
+                });
+            });
+        }
+
         google.charts.load('current', {'packages': ['corechart', 'bar', 'line']});
 
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('worldwide.json', function (response) {
-                let title = 'Top 15 countries with most number of cases';
+        drawColumnChart('total_cases/worldwide.json', 'Top 20 countries with most number of cases');
 
-                let options = {
-                    title: title,
-                    width: '100%',
-                    height: 600,
-                    legend: { position: "none" },
-                };
+        drawColumnChart('total_cases/worldwide-without-first.json', 'Top 20 countries with most number of cases (Excluding USA)');
 
-                let chart = new google.visualization.ColumnChart(document.getElementById('chart-1'));
+        drawColumnChart('total_deaths/worldwide.json', 'Top 20 countries with most number of deaths');
 
-                chart.draw(google.visualization.arrayToDataTable(response), options);
-            });
-        });
+        drawColumnChart('total_deaths/worldwide-without-first.json', 'Top 20 countries with most number of deaths (Excluding USA)');
 
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('worldwide-without-first.json', function (response) {
-                let title = 'Top 15 countries with most number of cases (Excluding USA)';
+        drawLineChart('total_cases/daily_case_trend.json', 'Trend of number of cases');
 
-                let options = {
-                    title: title,
-                    width: '100%',
-                    height: 600,
-                    legend: { position: "none" },
-                };
+        drawLineChart('total_cases/daily_case_trend_without_outliers.json', 'Trend of number of cases (Excluding USA & China)');
 
-                let chart = new google.visualization.ColumnChart(document.getElementById('chart-2'));
+        drawLineChart('total_deaths/daily_death_trend.json', 'Trend of number of deaths');
 
-                chart.draw(google.visualization.arrayToDataTable(response), options);
-            });
-        });
+        drawLineChart('total_deaths/daily_death_trend_without_outliers.json', 'Trend of number of deaths (Excluding USA & China)');
 
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('daily_case_trend.json', function (response) {
-                let title = 'Trend of number of cases';
-                let header = response.shift();
-                let colors = response.shift();
+        drawLineChart('daily_case_trend_without_outliers.json', 'Trend of number of cases (Excluding USA & China)');
 
-                charts(header, colors, response, title, '', 'chart-3');
-            });
-        });
+        drawLineChart('daily_trend_after_threshold_10k.json', 'Trend of number of cases after reaching 10k');
 
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('daily_case_trend_without_outliers.json', function (response) {
-                let title = 'Trend of number of cases (Excluding USA & China)';
-                let header = response.shift();
-                let colors = response.shift();
+        drawLineChart('daily_trend_after_threshold_without_outliers_10k.json', 'Trend of number of cases after reaching 10k (Excluding USA & China)');
 
-                charts(header, colors, response, title, '', 'chart-4');
-            });
-        });
+        drawLineChart('weekly_new_cases.json', 'Trend in numbers of weekly new cases');
 
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('daily_trend_after_threshold_10k.json', function (response) {
-                let title = 'Trend of number of cases after reaching 10k';
-                let header = response.shift();
-                let colors = response.shift();
-
-                charts(header, colors, response, title, '', 'chart-5');
-            });
-        });
-
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('daily_trend_after_threshold_without_outliers_10k.json', function (response) {
-                let title = 'Trend of number of cases after reaching 10k (Excluding USA & China)';
-                let header = response.shift();
-                let colors = response.shift();
-
-                charts(header, colors, response, title, '', 'chart-6');
-            });
-        });
-
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('weekly_new_cases.json', function (response) {
-                let title = 'Trend in numbers of weekly new cases';
-                let header = response.shift();
-                let colors = response.shift();
-
-                charts(header, colors, response, title, '', 'chart-7');
-            });
-        });
-
-        google.charts.setOnLoadCallback(function () {
-            loadJSON('weekly_new_cases_without_outlier.json', function (response) {
-                let title = 'Trend in numbers of weekly new cases (Without US)';
-                let header = response.shift();
-                let colors = response.shift();
-
-                charts(header, colors, response, title, '', 'chart-8');
-            });
-        });
+        drawLineChart('weekly_new_cases_without_outlier.json', 'Trend in numbers of weekly new cases (Without US)');
 
         function charts(header, colors, data, title, subtitle, element) {
             let table = new google.visualization.DataTable();
